@@ -547,7 +547,7 @@ const HomePage = () => {
 
           </Stack>
           {/* <Link to={`http://localhost:3000/news/${newsItem.id}`}> */}
-          <LatestNews />
+          {/* <LatestNews /> */}
 
     </Container>
 

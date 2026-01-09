@@ -12,8 +12,8 @@ import DashboardLayout from './layouts/dashboard';
 import HomePage from "./components/HomePage";
 // import ProfessorForm from "./components/ProfessorForm";
 // import ListProfessors from "./components/ListProfessors";
-// import RateProfessor from "./components/RateProfessor";
-// import ListRateProfessor from "./components/ListRateProfessor";
+import RateProfessor from "./components/RateProfessor";
+import ListRateProfessor from "./components/ListRateProfessor";
 // import ListRateUniversity from "./components/ListRateUniversity";
 // import ProfessorList from "./components/ProfessorList";
 // import UniversityList from "./components/UniversityList";
@@ -32,11 +32,11 @@ import CreateCourse from './components/Courses/CreateCourse';
 import CourseByDepartment from "./components/Courses/CourseByDepartment";
 import CourseByDepartmentVisitor from "./components/Courses/CourseByDepartmentVisitor";
 // import ListUsers from "./components/Users/ListUsers";
-// import DetailsProfessor from "./components/Professors/DetailsProfessor";
-// import CreateProfessor from "./components/Professors/CreateProfessor"
+import DetailsProfessor from "./components/Professors/DetailsProfessor";
+import CreateProfessor from "./components/Professors/CreateProfessor"
 // import CreateAdmin from "./components/admin/CreateAdmin"
-// import DetailsProfessorUser from "./components/Professors/DetailsProfessorUser";
-// import DetProfessorUser from "./components/Professors/DetProfessorUser";
+import DetailsProfessorUser from "./components/Professors/DetailsProfessorUser";
+import DetProfessorUser from "./components/Professors/DetProfessorUser";
 // import DetailsUniversityUser from "./components/Universities/DetailsUniversityUser";
 // import DetailsUniversityVisitor from "./components/Universities/DetailsUniversityVisitor";
 // import DetailsUniUser from "./components/Universities/DetailsUniUser";
@@ -49,8 +49,8 @@ import CourseByDepartmentVisitor from "./components/Courses/CourseByDepartmentVi
 // import ListAllNewsAdmin from "./components/News/ListAllNewsAdmin";
 // import GetNewsById from "./components/News/GetNewsById";
 // import EditNews from "./components/News/EditNews";
-// import GetOverallRatingProfessor from "./components/Professors/GetOverallRatingProfessor";
-// import CreateRateProfessor from "./components/RateProfessor/CreateRateProfessor";
+import GetOverallRatingProfessor from "./components/Professors/GetOverallRatingProfessor";
+import CreateRateProfessor from "./components/RateProfessor/CreateRateProfessor";
 // import ListAdmins from './components/admin/ListAdmins';
 // import AdminProfile from './components/admin/AdminProfile';
 
@@ -78,15 +78,15 @@ export default function Router() {
         // { path: 'createDepartment', element: <CreateDepartament /> },
         { path: 'courses', element: <DetailsCourse/> },
         { path: 'createCourse', element: <CreateCourse /> },
-        // { path: 'professors', element: <DetailsProfessor /> },
-        // { path: 'createProfessor', element: <CreateProfessor /> },
+        { path: 'professors', element: <DetailsProfessor /> },
+        { path: 'createProfessor', element: <CreateProfessor /> },
         // { path: 'createAdmin', element: <CreateAdmin /> },
         // { path: 'products', element: <ProductsPage /> },
         // { path: 'blog', element: <BlogPage /> },
         // { path: 'universities/depUni/:universityId', element: <DepartmentByUniversity /> },
         { path: 'departments/courseDep/:departmentId', element: <CourseByDepartment /> },
         // { path: 'universities/detailsUni/:universityId', element: <DetailsUni /> },
-        // { path: 'professors/listRateProfessorD/:professorId', element: <ListRateProfessor /> },
+        { path: 'professors/listRateProfessorD/:professorId', element: <ListRateProfessor /> },
         // { path: 'news', element: <ListAllNewsAdmin /> },
         // { path: 'createNews', element: <CreateNews /> },
         // { path: 'news/editNews/:id', element: <EditNews /> },
@@ -99,13 +99,13 @@ export default function Router() {
         { element: <Navigate to="/dashboardUser/appUser" />, index: true },
         // { path: 'appUser', element: <DashboardAppPageUser /> },
         // { path: 'professorsUser', element: <DetailsProfessorUser /> },
-        // { path: 'professorsUser/listRateProfessorS/:professorId', element: <ListRateProfessor /> },
+        { path: 'professorsUser/listRateProfessorS/:professorId', element: <ListRateProfessor /> },
         // { path: 'professorsUser/detProfessorUser/:professorId', element: <DetProfessorUser /> },
         // { path: 'universitiesUser', element: <DetailsUniversityUser /> },
         // { path: 'universitiesUser/depUniUser/:universityId', element: <DepartmentByUniversityUser /> },
         // { path: 'universitiesUser/detailsUniUser/:universityId', element: <DetailsUniUser /> },
         { path: 'departmentsUser/courseDepUser/:departmentId', element: <CourseByDepartment /> },
-        // { path: 'professorsUser/createRate/:professorId', element: <CreateRateProfessor /> },
+        { path: 'professorsUser/createRate/:professorId', element: <CreateRateProfessor /> },
         // { path: 'userProfile', element: <UserProfile /> },
 
       ],
@@ -135,14 +135,14 @@ export default function Router() {
     //   path: '/list', 
     //   element: <ListProfessors />,
     // },
-    // {
-    //   path: '/rate-professor', 
-    //   element: <RateProfessor />,
-    // },
-    // {
-    //   path: '/listRateProfessor/:professorId', 
-    //   element: <ListRateProfessor />,
-    // },
+    {
+      path: '/rate-professor', 
+      element: <RateProfessor />,
+    },
+    {
+      path: '/listRateProfessor/:professorId', 
+      element: <ListRateProfessor />,
+    },
     // {
     //   path: '/listRateUniversity/:universityId', 
     //   element: <ListRateUniversity />,
@@ -151,10 +151,10 @@ export default function Router() {
     //   path: '/professorList', 
     //   element: <ProfessorList />,
     // },
-    // {
-    //   path: '/getOverallRatingProfessor/:professorId', 
-    //   element: <GetOverallRatingProfessor />,
-    // },
+    {
+      path: '/getOverallRatingProfessor/:professorId', 
+      element: <GetOverallRatingProfessor />,
+    },
     // {
     //   path: '/universityList', 
     //   element: <UniversityList />,
@@ -195,10 +195,10 @@ export default function Router() {
     //   path: '/createDep', 
     //   element: <CreateDepartament />,
     // },
-    // {
-    //   path: '/detailsProf', 
-    //   element: <DetailsProfessor />,
-    // },
+    {
+      path: '/detailsProf', 
+      element: <DetailsProfessor />,
+    },
     // {
     //   path: '/DetailsUniversityVisitor', 
     //   element: <DetailsUniversityVisitor />,
