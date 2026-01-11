@@ -1,0 +1,32 @@
+/* ListRateProfessor.css */
+
+.page-title {
+    font-size: 32px;
+    color: #008080;
+    margin-bottom: 20px;
+  }
+
+
+  .react-stars {
+    display: inline-block;
+  }
+
+  .react-stars > svg {
+    fill: #d3d3d3; 
+  }
+
+  .react-stars-1 > svg {
+    fill: #FFD700; 
+  }
+
+  .react-stars-2 > svg {
+    fill: #008080; 
+  }
+
+  .react-stars-3 > svg {
+    fill: #FFA500; 
+  }
+
+  .react-stars-4 > svg {
+    fill: #800080;
+}

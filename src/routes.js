@@ -4,21 +4,21 @@ import DashboardLayout from './layouts/dashboard';
 // import BlogPage from './pages/BlogPage';
 // import UserPage from './pages/UserPage';
 // import LoginPage from './pages/LoginPage';
-// import Page404 from './pages/Page404';
+import Page404 from './pages/Page404';
 // import ProductsPage from './pages/ProductsPage';
 // import DashboardAppPage from './pages/DashboardAppPage';
 // import DashboardLayoutUser from './layouts/dashboard/nav/DashboardLayoutUser';
 // import DashboardAppPageUser from './pages/DashboardAppPageUser';
 import HomePage from "./components/HomePage";
 // import ProfessorForm from "./components/ProfessorForm";
-// import ListProfessors from "./components/ListProfessors";
+import ListProfessors from "./components/ListProfessors";
 import RateProfessor from "./components/RateProfessor";
 import ListRateProfessor from "./components/ListRateProfessor";
-// import ListRateUniversity from "./components/ListRateUniversity";
-// import ProfessorList from "./components/ProfessorList";
-// import UniversityList from "./components/UniversityList";
-// import ListUniversities from "./components/ListUniversities";
-// import ListDepartments from "./components/ListDepartments";
+import ListRateUniversity from "./components/ListRateUniversity";
+import ProfessorList from "./components/ProfessorList";
+import UniversityList from "./components/UniversityList";
+import ListUniversities from "./components/ListUniversities";
+import ListDepartments from "./components/ListDepartments";
 // import DetailsUniversity from "./components/Universities/DetailsUniversity";
 // import DetailsUni from "./components/Universities/DetailsUni";
 // import CreateUniversity from './components/Universities/CreateUniversity';
@@ -131,10 +131,10 @@ export default function Router() {
     //   path: '/news/:id',
     //   element: <GetNewsById />,
     // },
-    // {
-    //   path: '/list', 
-    //   element: <ListProfessors />,
-    // },
+    {
+      path: '/list', 
+      element: <ListProfessors />,
+    },
     {
       path: '/rate-professor', 
       element: <RateProfessor />,
@@ -143,34 +143,34 @@ export default function Router() {
       path: '/listRateProfessor/:professorId', 
       element: <ListRateProfessor />,
     },
-    // {
-    //   path: '/listRateUniversity/:universityId', 
-    //   element: <ListRateUniversity />,
-    // },
-    // {
-    //   path: '/professorList', 
-    //   element: <ProfessorList />,
-    // },
+    {
+      path: '/listRateUniversity/:universityId', 
+      element: <ListRateUniversity />,
+    },
+    {
+      path: '/professorList', 
+      element: <ProfessorList />,
+    },
     {
       path: '/getOverallRatingProfessor/:professorId', 
       element: <GetOverallRatingProfessor />,
     },
-    // {
-    //   path: '/universityList', 
-    //   element: <UniversityList />,
-    // },
-    // {
-    //   path: '/listUniversities', 
-    //   element: <ListUniversities />,
-    // },
-    // {
-    //   path: '/list-departments', 
-    //   element: <ListDepartments />,
-    // },
-    // {
-    //   path: '/404', 
-    //   element: <Page404 />,
-    // },
+    {
+      path: '/universityList', 
+      element: <UniversityList />,
+    },
+    {
+      path: '/listUniversities', 
+      element: <ListUniversities />,
+    },
+    {
+      path: '/list-departments', 
+      element: <ListDepartments />,
+    },
+    {
+      path: '/404', 
+      element: <Page404 />,
+    },
     {
       path: '/', 
       element: <Navigate to="/home" />,

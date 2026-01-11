@@ -1,0 +1,142 @@
+
+  
+  .container {
+    width: 95%;
+    padding: 30px;
+    margin-left: 30px;
+  }
+  
+  .box {
+    /* background-color: #d0d2e1;
+    border: 1.3px solid #908db8; */
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-right: 10px;
+    margin-top: -20px;
+    border-radius: 50px;
+  }
+  
+  .content {
+    flex-grow: 1;
+  }
+  
+  .text {
+    margin-bottom: 10px;
+  }
+  .text:hover{
+ color:rgb(54, 52, 52);
+  }
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .feedback-input {
+    flex-grow: 1;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+  }
+  .feedback-input:hover{
+    border-color: #a200ff;
+  }
+  .feedback-input:focus {
+    border-color: #a200ff;
+    outline: none; /* Optional: Remove default outline */
+  }
+  .submit-button {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px 10px;
+    background-color: #a200ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 13px;
+    margin-left: 5px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  
+  .submit-button:hover {
+   scale: 1.1;
+   color :black;
+  }
+  
+  .rate {
+    padding-left: 10px;
+    padding-bottom: 20px;
+  }
+  
+  .rate h2 {
+    margin-left: 10px;
+  }
+  
+  .rate input[type="radio"] {
+    display: none;
+  }
+  
+  .rate label {
+    font-size: 25px;
+    margin-right: 5px;
+    cursor: pointer;
+    color: #a9a9c5;
+  }
+  
+  .rate label:before {
+    content: '★';
+  }
+  
+  .rate input[type="radio"]:checked ~ label {
+    color: #a200ff;
+  }
+  
+  .rate label:hover,
+  .rate input[type="radio"]:hover ~ label {
+    color: #908db8;
+  }
+  
+  h3 {
+    margin-left: 40%;
+    color: black;
+  }
+  
+  .nn {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 23px;
+  }
+  
+  @media (max-width: 768px) {
+    .box {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .image {
+      margin-bottom: 20px;
+      margin-top: 0;
+    }
+  
+    .submit-button {
+      margin-left: 0;
+    }
+  
+    .rate {
+      padding-bottom: 10px;
+    }
+  
+    h3 {
+      margin-left: 0;
+      text-align: center;
+    }
+  }
