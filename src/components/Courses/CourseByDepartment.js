@@ -1,16 +1,17 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  Paper,
-  Stack,
-  IconButton,
-  Typography,
-  Divider,
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  IconButton,
+  Divider,
+  Typography,
+  Stack,
+  Paper,
 } from '@mui/material';
-
 import { ArrowBack as ArrowBackIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 function CourseByDepartment() {
