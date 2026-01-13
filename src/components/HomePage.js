@@ -18,7 +18,7 @@ import {Card, Stack, Button, Link} from '@mui/material';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-// import LatestNews from './LatestNews';
+import LatestNews from './LatestNews';
 
 
 
@@ -390,21 +390,21 @@ const HomePage = () => {
   };
 
 
-  // const [latestNews, setLatestNews] = useState([]);
+  const [latestNews, setLatestNews] = useState([]);
 
-  // useEffect(() => {
-  //   async function fetchLatestNews() {
-  //     try {
-  //       const response = await fetch('http://localhost:44364/api/GetThreeLatestCreatedNews');
-  //       const data = await response.json();
-  //       setLatestNews(data);
-  //     } catch (error) {
-  //       console.error('Error fetching latest news:', error);
-  //     }
-  //   }
+  useEffect(() => {
+    async function fetchLatestNews() {
+      try {
+        const response = await fetch('http://localhost:44364/api/GetThreeLatestCreatedNews');
+        const data = await response.json();
+        setLatestNews(data);
+      } catch (error) {
+        console.error('Error fetching latest news:', error);
+      }
+    }
 
-  //   fetchLatestNews();
-  // }, []);
+    fetchLatestNews();
+  }, []);
   
   
     return (
@@ -547,7 +547,7 @@ const HomePage = () => {
 
           </Stack>
           {/* <Link to={`http://localhost:3000/news/${newsItem.id}`}> */}
-          {/* <LatestNews /> */}
+          <LatestNews />
 
     </Container>
 

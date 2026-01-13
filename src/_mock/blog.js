@@ -39,7 +39,7 @@ const posts = [...Array(23)].map((_, index) => ({
   share: faker.datatype.number(),
   favorite: faker.datatype.number(),
   author: {
-    name: faker.name.findName(),
+    name: faker.name.fullName(),
     avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
   },
 }));

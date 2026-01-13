@@ -43,7 +43,7 @@ function CreateRateProfessor() {
 
     try {
       const response = await fetch('http://localhost:44364/api/CreateRate', {
-        method: 'POST',
+        method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
         },
