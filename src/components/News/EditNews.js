@@ -1,19 +1,25 @@
-
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button } from '@mui/material';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  Button,
+} from "@mui/material";
+import api from "../../api/axios";
 
 const EditNews = ({ id, open, onClose, onUpdate }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
-  const [publicationDate, setPublicationDate] = useState('');
-  const [profilePhotoPath, setProfilePhotoPath] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
+  const [publicationDate, setPublicationDate] = useState("");
+  const [profilePhotoPath, setProfilePhotoPath] = useState("");
 
   useEffect(() => {
     // Fetch news details by ID
-    axios.get(`https://localhost:44364/api/News/GetNewsById/${id}`)
-      .then(response => {
+    api
+      .get(`/api/News/GetNewsById/${id}`)
+      .then((response) => {
         const newsData = response.data;
         setTitle(newsData.title);
         setContent(newsData.content);
@@ -21,24 +27,24 @@ const EditNews = ({ id, open, onClose, onUpdate }) => {
         setPublicationDate(newsData.publicationDate);
         setProfilePhotoPath(newsData.profilePhotoPath);
       })
-      .catch(error => {
-        console.error('Error fetching news details:', error);
+      .catch((error) => {
+        console.error("Error fetching news details:", error);
       });
   }, [id]);
 
-  const handleTitleChange = e => {
+  const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleContentChange = e => {
+  const handleContentChange = (e) => {
     setContent(e.target.value);
   };
 
-  const handleCategoryChange = e => {
+  const handleCategoryChange = (e) => {
     setCategory(e.target.value);
   };
 
-  const handlePublicationDateChange = e => {
+  const handlePublicationDateChange = (e) => {
     setPublicationDate(e.target.value);
   };
 
@@ -49,21 +55,22 @@ const EditNews = ({ id, open, onClose, onUpdate }) => {
       content: content,
       category: category,
       publicationDate: publicationDate,
-      profilePhotoPath: profilePhotoPath
+      profilePhotoPath: profilePhotoPath,
     };
 
     // Update news details
-    axios.put(`https://localhost:44364/api/News/UpdateNews/${id}`, payload, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    api
+      .put(`/api/News/UpdateNews/${id}`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then(() => {
         onUpdate(id, title, content, category, publicationDate);
         onClose();
       })
-      .catch(error => {
-        console.error('Error updating news:', error);
+      .catch((error) => {
+        console.error("Error updating news:", error);
       });
   };
 
@@ -76,7 +83,7 @@ const EditNews = ({ id, open, onClose, onUpdate }) => {
           value={title}
           onChange={handleTitleChange}
           fullWidth
-          sx={{marginTop: 2}}
+          sx={{ marginTop: 2 }}
         />
         <TextField
           label="Content"
@@ -85,14 +92,14 @@ const EditNews = ({ id, open, onClose, onUpdate }) => {
           multiline
           rows={4}
           fullWidth
-          sx={{marginTop: 2}}
+          sx={{ marginTop: 2 }}
         />
         <TextField
           label="Category"
           value={category}
           onChange={handleCategoryChange}
           fullWidth
-          sx={{marginTop: 2}}
+          sx={{ marginTop: 2 }}
         />
         <TextField
           label="Publication Date"
@@ -100,7 +107,7 @@ const EditNews = ({ id, open, onClose, onUpdate }) => {
           value={publicationDate}
           onChange={handlePublicationDateChange}
           fullWidth
-          sx={{marginTop: 2}}
+          sx={{ marginTop: 2 }}
           InputLabelProps={{
             shrink: true,
           }}

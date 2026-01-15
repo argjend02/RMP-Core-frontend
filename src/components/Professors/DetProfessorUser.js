@@ -1,7 +1,18 @@
-
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Typography, Paper, Rating, Box, Avatar, Divider, Container, Button, Link, List, Input, Dialog,
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Typography,
+  Paper,
+  Rating,
+  Box,
+  Avatar,
+  Divider,
+  Container,
+  Button,
+  Link,
+  List,
+  Input,
+  Dialog,
   DialogContent,
   DialogTitle,
   Slide,
@@ -9,18 +20,16 @@ import { Typography, Paper, Rating, Box, Avatar, Divider, Container, Button, Lin
   Toolbar,
   IconButton,
   Stack,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { Directions } from '@mui/icons-material';
-import SearchIcon from '@mui/icons-material/Search';
-import Logo2 from '../logo/Logo2';
-import ListRateProfessor from '../../components/ListRateProfessor'; 
-import Iconify from '../iconify';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CreateRateProfessor from '../../components/RateProfessor/CreateRateProfessor'; 
-
-
-
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Directions } from "@mui/icons-material";
+import SearchIcon from "@mui/icons-material/Search";
+import Logo2 from "../logo/Logo2";
+import ListRateProfessor from "../../components/ListRateProfessor";
+import Iconify from "../iconify";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CreateRateProfessor from "../../components/RateProfessor/CreateRateProfessor";
+import api from "../../api/axios";
 
 function DetProfessorUser() {
   const { entityId } = useParams();
@@ -29,11 +38,9 @@ function DetProfessorUser() {
   const [openDialog, setOpenDialog] = useState(false);
   const [openCreateRateDialog, setOpenCreateRateDialog] = useState(false);
 
-
   const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
-
 
   const [newRate, setNewRate] = useState({
     communicationSkills: 0,
@@ -42,30 +49,30 @@ function DetProfessorUser() {
     feedback: "",
   });
 
-
-
-  useEffect(() => {
-    fetchProfessorAndRating();
-  }, []);
-
-  const fetchProfessorAndRating = async () => {
+  const fetchProfessorAndRating = useCallback(async () => {
     try {
-      const professorResponse = await fetch(`http://localhost:44364/api/GetProfessorById/${entityId}`);
-      const professorData = await professorResponse.json();
-      setProfessor(professorData);
+      const professorResponse = await api.get(
+        `/api/GetProfessorById/${entityId}`
+      );
+      setProfessor(professorResponse.data);
 
-      const ratingResponse = await fetch(`https://localhost:44364/api/RateProfessor/GetOverallRatingForProfessors`);
-      const ratingData = await ratingResponse.json();
-      const professorRating = ratingData.find(rating => rating.id === entityId);
+      const ratingResponse = await api.get(
+        `/api/RateProfessor/GetOverallRatingForProfessors`
+      );
+      const professorRating = ratingResponse.data.find(
+        (rating) => rating.id === entityId
+      );
       if (professorRating) {
         setOverallRating(professorRating);
       }
     } catch (error) {
-      console.error('Error during request:', error);
+      console.error("Error during request:", error);
     }
-  };
+  }, [entityId]);
 
-
+  useEffect(() => {
+    fetchProfessorAndRating();
+  }, [fetchProfessorAndRating]);
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -79,7 +86,6 @@ function DetProfessorUser() {
     window.history.back();
   };
 
-
   const handleRateChange = (field, value) => {
     setNewRate((prevRate) => ({
       ...prevRate,
@@ -89,34 +95,19 @@ function DetProfessorUser() {
 
   const createRateForProfessor = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:44364/api/RateProfessor/CreateRateProfessor`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            entityId: parseInt(entityId),
-            ...newRate,
-          }),
-        }
-      );
-  
-      if (response.ok) {
-        // Do something after successfully creating the rate
-        // For example, you could close the dialog and refresh the data
-        handleCloseDialog();
-        fetchProfessorAndRating();
-      } else {
-        console.error('Error creating rate:', response.statusText);
-      }
+      await api.post(`/api/RateProfessor/CreateRateProfessor`, {
+        entityId: parseInt(entityId),
+        ...newRate,
+      });
+
+      // Do something after successfully creating the rate
+      // For example, you could close the dialog and refresh the data
+      handleCloseDialog();
+      fetchProfessorAndRating();
     } catch (error) {
-      console.error('Error during request:', error);
+      console.error("Error during request:", error);
     }
   };
-  
-
 
   const handleOpenCreateRateDialog = () => {
     setOpenCreateRateDialog(true);
@@ -124,79 +115,101 @@ function DetProfessorUser() {
   const handleCloseCreateDialog = () => {
     setOpenCreateRateDialog(false);
   };
-  
 
   return (
     <div>
-
-              <div style={{ paddingLeft: '0px'}}>
-        <Stack direction="row" alignItems="center" >
+      <div style={{ paddingLeft: "0px" }}>
+        <Stack direction="row" alignItems="center">
           <IconButton color="primary" onClick={handleGoBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h4">
-            Create Rate
-          </Typography>
+          <Typography variant="h4">Create Rate</Typography>
         </Stack>
       </div>
 
-      <Container sx={{marginTop: 0}}>
-      {/* <Typography variant="h4">Professor Details and Ratings</Typography> */}
-      <Paper elevation={3} style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', width: '70%', margin: 'auto' }}>
-        <Box style={{width: '50%'}} >
-          <Avatar 
-          alt={`${professor.firstName} ${professor.lastName}`} 
-          // src="/path-to-avatar-image.jpg" 
-          src={`http://localhost:44364/${professor.profilePhotoPath}`}
-          sx={{ width: 150, height: 150, marginBottom: 2 }} />
-          <Typography variant="h6">{professor.firstName} {professor.lastName}</Typography>
-          <Typography>{professor.education}</Typography>
-          <Typography sx={{marginBottom: 3}}>{professor.role}</Typography>
-          <Link 
-          // to="http://localhost:3000/dashboard/createProfessor" 
-          to="#"
-          onClick={handleOpenDialog}
-          style={{ textDecoration: 'none', marginRight: 10 }}>
-              <Button variant="contained">
-                See All Rates
-              </Button>
+      <Container sx={{ marginTop: 0 }}>
+        {/* <Typography variant="h4">Professor Details and Ratings</Typography> */}
+        <Paper
+          elevation={3}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "20px",
+            width: "70%",
+            margin: "auto",
+          }}
+        >
+          <Box style={{ width: "50%" }}>
+            <Avatar
+              alt={`${professor.firstName} ${professor.lastName}`}
+              // src="/path-to-avatar-image.jpg"
+              src={`http://localhost:44364/${professor.profilePhotoPath}`}
+              sx={{ width: 150, height: 150, marginBottom: 2 }}
+            />
+            <Typography variant="h6">
+              {professor.firstName} {professor.lastName}
+            </Typography>
+            <Typography>{professor.education}</Typography>
+            <Typography sx={{ marginBottom: 3 }}>{professor.role}</Typography>
+            <Link
+              // to="http://localhost:3000/dashboard/createProfessor"
+              to="#"
+              onClick={handleOpenDialog}
+              style={{ textDecoration: "none", marginRight: 10 }}
+            >
+              <Button variant="contained">See All Rates</Button>
             </Link>
 
-                    <Link to="#" onClick={handleOpenCreateRateDialog} style={{ textDecoration: 'none' }}>
-          <Button  variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            Create Rate
-          </Button>
-
-        </Link>
-
-
-        </Box>
-        <Divider orientation="vertical" flexItem />
-        <Box style={{width: '50%'}}>
-
-          <Box sx={{marginTop: 6}}>
-            <Typography>
-              <strong>Communication Skills:</strong>  <strong className='strRate'>{overallRating.communicationSkills}</strong> /5
-            </Typography>
-            {/* <Rating value={overallRating.communicationSkills} readOnly /> */}
+            <Link
+              to="#"
+              onClick={handleOpenCreateRateDialog}
+              style={{ textDecoration: "none" }}
+            >
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+              >
+                Create Rate
+              </Button>
+            </Link>
           </Box>
-          <Box>
-            <Typography>
-              <strong>Responsiveness:</strong> <strong className='strRate'>{overallRating.responsiveness}</strong> /5
+          <Divider orientation="vertical" flexItem />
+          <Box style={{ width: "50%" }}>
+            <Box sx={{ marginTop: 6 }}>
+              <Typography>
+                <strong>Communication Skills:</strong>{" "}
+                <strong className="strRate">
+                  {overallRating.communicationSkills}
+                </strong>{" "}
+                /5
+              </Typography>
+              {/* <Rating value={overallRating.communicationSkills} readOnly /> */}
+            </Box>
+            <Box>
+              <Typography>
+                <strong>Responsiveness:</strong>{" "}
+                <strong className="strRate">
+                  {overallRating.responsiveness}
+                </strong>{" "}
+                /5
+              </Typography>
+              {/* <Rating value={overallRating.responsiveness} readOnly /> */}
+            </Box>
+            <Box>
+              <Typography>
+                <strong>Grading Fairness:</strong>{" "}
+                <strong className="strRate">
+                  {overallRating.gradingFairness}
+                </strong>
+                /5
+              </Typography>
+              {/* <Rating value={overallRating.gradingFairness} readOnly /> */}
+            </Box>
+            <Typography sx={{ marginTop: 11 }}>
+              Participants test: {overallRating.totalRatings}
             </Typography>
-            {/* <Rating value={overallRating.responsiveness} readOnly /> */}
           </Box>
-          <Box>
-            <Typography>
-              <strong>Grading Fairness:</strong> <strong className='strRate'>{overallRating.gradingFairness}</strong>/5
-            </Typography>
-            {/* <Rating value={overallRating.gradingFairness} readOnly /> */}
-          </Box>
-          <Typography sx={{marginTop: 11}}>
-            Participants test: {overallRating.totalRatings}
-          </Typography>
-        </Box>
-      </Paper>
+        </Paper>
       </Container>
       <Dialog
         open={openDialog}
@@ -206,7 +219,10 @@ function DetProfessorUser() {
         TransitionComponent={Transition}
         fullWidth
       >
-        <AppBar className='btn-mui-blackContained' sx={{ position: 'relative' }}>
+        <AppBar
+          className="btn-mui-blackContained"
+          sx={{ position: "relative" }}
+        >
           <Toolbar>
             {/* <IconButton
               edge="start"
@@ -230,7 +246,6 @@ function DetProfessorUser() {
         </DialogContent>
       </Dialog>
 
-
       <Dialog
         open={openCreateRateDialog}
         onClose={() => setOpenCreateRateDialog(false)}
@@ -239,7 +254,7 @@ function DetProfessorUser() {
         TransitionComponent={Transition}
         fullWidth
       >
-                <AppBar className='btn-mui-grayContained' sx={{ position: 'relative' }}>
+        <AppBar className="btn-mui-grayContained" sx={{ position: "relative" }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -251,7 +266,7 @@ function DetProfessorUser() {
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Create rate for {professor.firstName} {professor.lastName}
-            </Typography> 
+            </Typography>
             {/* <Button autoFocus color="inherit" onClick={handleCloseDialog}>
               Close
             </Button> */}
@@ -261,8 +276,6 @@ function DetProfessorUser() {
           <CreateRateProfessor entityId={entityId} />
         </DialogContent>
       </Dialog>
-
-
     </div>
   );
 }

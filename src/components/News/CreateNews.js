@@ -1,78 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Input, Grid, Stack, Typography, Alert, IconButton } from '@mui/material';
-import axios from 'axios';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Container,
+  Input,
+  Grid,
+  Stack,
+  Typography,
+  Alert,
+  IconButton,
+} from "@mui/material";
+import api from "../../api/axios";
+import { AnimatePresence, motion } from "framer-motion";
 
-import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const CreateNews = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
-  const [publicationDate, setPublicationDate] = React.useState(dayjs(new Date()));
+  const [publicationDate, setPublicationDate] = React.useState(
+    dayjs(new Date())
+  );
 
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState("");
 
-  const [message, setMessage] = useState('');
-    const [animationComplete, setAnimationComplete] = useState(false);
-    useEffect(() => {
+  const [message, setMessage] = useState("");
+  const [animationComplete, setAnimationComplete] = useState(false);
+  useEffect(() => {
     setAnimationComplete(true);
-    }, []);
+  }, []);
 
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
 
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-      };
-    
-      const handleContent = (e) => {
-        setContent(e.target.value);
-      };
-    
-      const handlePublicationDate = (e) => {
-        setPublicationDate(e.target.value);
-      };
-    
-      const handleCategory= (e) => {
-        setCategory(e.target.value);
-      };
-    
+  const handleContent = (e) => {
+    setContent(e.target.value);
+  };
+
+  const handlePublicationDate = (e) => {
+    setPublicationDate(e.target.value);
+  };
+
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const payload = new FormData();
-    payload.append('title', title);
-    payload.append('content', content);
-    payload.append('publicationDate', publicationDate);
-    payload.append('category', category);
+    payload.append("title", title);
+    payload.append("content", content);
+    payload.append("publicationDate", publicationDate);
+    payload.append("category", category);
 
-    const profilePhotoInput = document.getElementById('profilePhoto');
+    const profilePhotoInput = document.getElementById("profilePhoto");
     if (profilePhotoInput.files.length > 0) {
       payload.append("file", profilePhotoInput.files[0]);
     }
 
-
-    axios
-    .post("https://localhost:44364/api/News/CreateNews", payload, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        // Authorization: `Bearer ${token}` // Include the token in the headers
-
-      },
-    })
-    .then((response) => {
-      console.log(response.data);
-      setMessage('News created successfully!');
-    })
-    .catch((error) => {
-      console.error('Error creating news:', error.message);
-       setMessage('Error creating news. Please try again later.');
-    });
+    api
+      .post("/api/News/CreateNews", payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          // Authorization: `Bearer ${token}` // Include the token in the headers
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setMessage("News created successfully!");
+      })
+      .catch((error) => {
+        console.error("Error creating news:", error.message);
+        setMessage("Error creating news. Please try again later.");
+      });
   };
 
   const handleGoBack = () => {
@@ -80,15 +88,13 @@ const CreateNews = () => {
   };
 
   return (
-    <Container sx={{ mt: 0, width: '80%' }}>
-      <div style={{ paddingLeft: '0px'}}>
-        <Stack direction="row" alignItems="center" >
+    <Container sx={{ mt: 0, width: "80%" }}>
+      <div style={{ paddingLeft: "0px" }}>
+        <Stack direction="row" alignItems="center">
           <IconButton color="primary" onClick={handleGoBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h4">
-            Create News
-          </Typography>
+          <Typography variant="h4">Create News</Typography>
         </Stack>
       </div>
       <form onSubmit={handleSubmit}>
@@ -121,22 +127,20 @@ const CreateNews = () => {
                   />
                 </Grid> */}
 
-
-
                 <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
-                    <DateTimePicker 
-                    label="Basic date time picker"
-                    value={publicationDate}
-                    // onChange={handlePublicationDate} 
-                    onChange={(newValue) => setPublicationDate(newValue)} 
-                    />
-                </DemoContainer>
-                </LocalizationProvider>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      components={["DateTimePicker", "DateTimePicker"]}
+                    >
+                      <DateTimePicker
+                        label="Basic date time picker"
+                        value={publicationDate}
+                        // onChange={handlePublicationDate}
+                        onChange={(newValue) => setPublicationDate(newValue)}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
                 </Grid>
-
-
 
                 <Grid item xs={6}>
                   <TextField
@@ -148,16 +152,16 @@ const CreateNews = () => {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                    <Input
-                      type="file"
-                      label="Photo"
-                      id="profilePhoto"
-                      name="profilePhoto"
-                      accept="image/*"
-                      fullWidth
-                      margin="normal"
-                      // sx={{ mb: 2 }}
-                    />
+                  <Input
+                    type="file"
+                    label="Photo"
+                    id="profilePhoto"
+                    name="profilePhoto"
+                    accept="image/*"
+                    fullWidth
+                    margin="normal"
+                    // sx={{ mb: 2 }}
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -178,7 +182,10 @@ const CreateNews = () => {
                   </Button>
                 </Grid>
                 {message && (
-                  <Alert severity={message.startsWith('Error') ? 'error' : 'success'} sx={{ mt: 2 }}>
+                  <Alert
+                    severity={message.startsWith("Error") ? "error" : "success"}
+                    sx={{ mt: 2 }}
+                  >
                     {message}
                   </Alert>
                 )}

@@ -1,11 +1,20 @@
-
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Input, Grid, Stack, Typography, Breadcrumbs, 
-         Link, IconButton, Alert } from '@mui/material';
-import axios from "axios";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { AnimatePresence, motion } from 'framer-motion';
-
+import React, { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Container,
+  Input,
+  Grid,
+  Stack,
+  Typography,
+  Breadcrumbs,
+  Link,
+  IconButton,
+  Alert,
+} from "@mui/material";
+import api from "../../api/axios";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { AnimatePresence, motion } from "framer-motion";
 
 const CreateUniversity = () => {
   const [name, setName] = useState("");
@@ -15,14 +24,13 @@ const CreateUniversity = () => {
   const [studentsNumber, setStudentsNumber] = useState("0");
   const [coursesNumber, setCoursesNumber] = useState("0");
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const [animationComplete, setAnimationComplete] = useState(false);
   useEffect(() => {
     setAnimationComplete(true);
   }, []);
 
-  
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -50,12 +58,11 @@ const CreateUniversity = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-
-      // try {
-    const token = localStorage.getItem('token'); 
+    // try {
+    const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage('You need to log in to create a university.');
+      setMessage("You need to log in to create a university.");
       return;
     }
 
@@ -67,58 +74,52 @@ const CreateUniversity = () => {
     payload.append("University.StudentsNumber", studentsNumber);
     payload.append("University.CoursesNumber", coursesNumber);
 
-
-
-    const profilePhotoInput = document.getElementById('profilePhoto');
+    const profilePhotoInput = document.getElementById("profilePhoto");
     if (profilePhotoInput.files.length > 0) {
       payload.append("file", profilePhotoInput.files[0]);
     }
 
-    axios
-        .post("https://localhost:44364/api/University/CreateUniversity", payload, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}` 
+    api
+      .post("/api/University/CreateUniversity", payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        // console.log('University created successfully:', data);
+        setMessage("University created successfully!");
+      })
+      .catch((error) => {
+        console.error("Error creating university:", error.message);
+        setMessage("Error creating university. Please try again later.");
+      });
+  };
 
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          // console.log('University created successfully:', data);
-          setMessage('University created successfully!');
-
-        })
-        .catch((error) => {
-          console.error('Error creating university:', error.message);
-           setMessage('Error creating university. Please try again later.');
-        });
-    };
-
-    const handleGoBack = () => {
-      window.history.back();
-    };
+  const handleGoBack = () => {
+    window.history.back();
+  };
 
   return (
-  <Container sx={{ mt: 0, width: '80%' }}>
-            <div style={{ paddingLeft: '0px'}}>
-              <Stack direction="row" alignItems="center" >
-                  <IconButton color="primary" onClick={handleGoBack}>
-                      <ArrowBackIcon />
-                  </IconButton>
-                  <Typography variant="h4" >
-                      Create University
-                  </Typography>
-              </Stack>
-            </div>
-              <form onSubmit={handleSubmit}>
-              <AnimatePresence>
-                {animationComplete && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    exit={{ opacity: 0, y: -50 }} // Animacioni kur komponenti largohet
-                  >
+    <Container sx={{ mt: 0, width: "80%" }}>
+      <div style={{ paddingLeft: "0px" }}>
+        <Stack direction="row" alignItems="center">
+          <IconButton color="primary" onClick={handleGoBack}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h4">Create University</Typography>
+        </Stack>
+      </div>
+      <form onSubmit={handleSubmit}>
+        <AnimatePresence>
+          {animationComplete && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              exit={{ opacity: 0, y: -50 }} // Animacioni kur komponenti largohet
+            >
               <Grid container spacing={2} sx={{ mt: 3 }}>
                 <Grid item xs={12}>
                   <TextField
@@ -131,7 +132,7 @@ const CreateUniversity = () => {
                     // sx={{ mb: 2 }}
                   />
                 </Grid>
-                            
+
                 <Grid item xs={6}>
                   <TextField
                     type="text"
@@ -142,7 +143,7 @@ const CreateUniversity = () => {
                     fullWidth
                     // sx={{ mb: 2 }}
                   />
-                  </Grid>
+                </Grid>
 
                 <Grid item xs={6}>
                   <TextField
@@ -154,7 +155,7 @@ const CreateUniversity = () => {
                     fullWidth
                     // sx={{ mb: 2 }}
                   />
-                  </Grid>
+                </Grid>
 
                 <Grid item xs={6}>
                   <TextField
@@ -166,7 +167,7 @@ const CreateUniversity = () => {
                     fullWidth
                     // sx={{ mb: 2 }}
                   />
-                  </Grid>
+                </Grid>
 
                 <Grid item xs={6}>
                   <TextField
@@ -177,9 +178,9 @@ const CreateUniversity = () => {
                     required
                     fullWidth
                   />
-                  </Grid>
+                </Grid>
 
-                  <Grid item xs={12}>
+                <Grid item xs={12}>
                   <TextField
                     type="text"
                     label="Description"
@@ -192,48 +193,41 @@ const CreateUniversity = () => {
                     fullWidth
                     // sx={{ mb: 2 }}
                   />
-                  </Grid>
+                </Grid>
 
                 <Grid item xs={12}>
-                      <Input
-                      type="file"
-                      label="Photo"
-                      id="profilePhoto"
-                      name="profilePhoto"
-                      accept="image/*"
-                      fullWidth
-                      margin="normal"
-                      // sx={{ mb: 2 }}
-                    />
-                    </Grid>
-                  {/* <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" /> */}  
-                  <Grid item xs={12}>
+                  <Input
+                    type="file"
+                    label="Photo"
+                    id="profilePhoto"
+                    name="profilePhoto"
+                    accept="image/*"
+                    fullWidth
+                    margin="normal"
+                    // sx={{ mb: 2 }}
+                  />
+                </Grid>
+                {/* <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" /> */}
+                <Grid item xs={12}>
                   <Button type="submit" variant="contained" color="primary">
                     Create University
                   </Button>
-                  </Grid>
-                    {message && (
-                      <Alert
-                        severity={message.startsWith('Error') ? 'error' : 'success'}
-                        sx={{ mt: 2 }}
-                      >
-                        {message}
-                      </Alert>
-                    )}
                 </Grid>
-                </motion.div>
-                  )}
-                </AnimatePresence>
-              </form>
-
-            
-      </Container>
+                {message && (
+                  <Alert
+                    severity={message.startsWith("Error") ? "error" : "success"}
+                    sx={{ mt: 2 }}
+                  >
+                    {message}
+                  </Alert>
+                )}
+              </Grid>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </form>
+    </Container>
   );
 };
 
 export default CreateUniversity;
-
-
-
-
-

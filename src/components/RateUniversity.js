@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import api from "../api/axios";
 
 const RateUniversity = () => {
   const [rateUniversities, setRateUniversities] = useState([]);
@@ -7,7 +7,7 @@ const RateUniversity = () => {
     universityid: 0,
     studentid: 0,
     overall: 0,
-    feedback: '',
+    feedback: "",
   });
 
   useEffect(() => {
@@ -16,10 +16,10 @@ const RateUniversity = () => {
 
   const getAllRateUniversities = async () => {
     try {
-      const response = await axios.get('/api/RateUniversity');
+      const response = await api.get("/api/RateUniversity");
       setRateUniversities(response.data);
     } catch (error) {
-      console.error('Error fetching rate university:', error);
+      console.error("Error fetching rate university:", error);
     }
   };
 
@@ -29,25 +29,30 @@ const RateUniversity = () => {
 
   const handleCreateRateUniversity = async () => {
     try {
-      const response = await axios.post('/api/RateUniversity/CreateRateUniversity', formData);
+      const response = await api.post(
+        "/api/RateUniversity/CreateRateUniversity",
+        formData
+      );
       setRateUniversities([...rateUniversities, response.data]);
       setFormData({
         universityid: 0,
         studentid: 0,
         overall: 0,
-        feedback: '',
+        feedback: "",
       });
     } catch (error) {
-      console.error('Error creating rate university:', error);
+      console.error("Error creating rate university:", error);
     }
   };
 
-  const handleDeleteRateUniversity= async (id) => {
+  const handleDeleteRateUniversity = async (id) => {
     try {
-      await axios.delete(`/api/RateUniversity/DeleteRateUniversity/${id}`);
-      setRateUniversities(rateUniversities.filter((university) => university.id !== id));
+      await api.delete(`/api/RateUniversity/DeleteRateUniversity/${id}`);
+      setRateUniversities(
+        rateUniversities.filter((university) => university.id !== id)
+      );
     } catch (error) {
-      console.error('Error deleting rate university:', error);
+      console.error("Error deleting rate university:", error);
     }
   };
 
@@ -57,10 +62,20 @@ const RateUniversity = () => {
       <div>
         <h2>Create New Rate Universities</h2>
         <label>University ID:</label>
-        <input type="number" name="universityid" value={formData.universityid} onChange={handleChange} />
+        <input
+          type="number"
+          name="universityid"
+          value={formData.universityid}
+          onChange={handleChange}
+        />
 
         <label>Student ID:</label>
-        <input type="number" name="studentid" value={formData.studentid} onChange={handleChange} />
+        <input
+          type="number"
+          name="studentid"
+          value={formData.studentid}
+          onChange={handleChange}
+        />
 
         <label>Overall:</label>
         <input
@@ -71,7 +86,11 @@ const RateUniversity = () => {
         />
 
         <label>Feedback:</label>
-        <textarea name="feedback" value={formData.feedback} onChange={handleChange} />
+        <textarea
+          name="feedback"
+          value={formData.feedback}
+          onChange={handleChange}
+        />
 
         <button onClick={handleCreateRateUniversity}>Create</button>
       </div>
@@ -85,7 +104,9 @@ const RateUniversity = () => {
               <p>Student ID: {university.studentId}</p>
               <p>Overall: {university.overall}</p>
               <p>Feedback: {university.feedback}</p>
-              <button onClick={() => handleDeleteRateUniversity(university.id)}>Delete</button>
+              <button onClick={() => handleDeleteRateUniversity(university.id)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>

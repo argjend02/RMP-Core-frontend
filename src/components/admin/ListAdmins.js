@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Typography,
   Table,
@@ -19,12 +19,15 @@ import {
   DialogActions,
   Button,
   Avatar,
-  TablePagination
-} from '@mui/material';
-import Iconify from '../iconify';
-import { MoreVert as MoreVertIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { AnimatePresence, motion } from 'framer-motion';
-
+  TablePagination,
+} from "@mui/material";
+import Iconify from "../iconify";
+import {
+  MoreVert as MoreVertIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
+import { AnimatePresence, motion } from "framer-motion";
+import api from "../../api/axios";
 
 function ListAdmins() {
   const [users, setUsers] = useState([]);
@@ -35,25 +38,18 @@ function ListAdmins() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [animationComplete, setAnimationComplete] = useState(false);
-  
-  
+
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:44364/api/GetAdmins', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      const filteredUsers = data.filter(user => user.role === 0);
+      const response = await api.get("/api/GetAdmins");
+      const filteredUsers = response.data.filter((user) => user.role === 0);
 
       setUsers(filteredUsers);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -63,37 +59,26 @@ function ListAdmins() {
   }, []);
 
   const handleDeleteClick = (user) => {
-    setUserToDelete(user); 
+    setUserToDelete(user);
     setDialogOpenDelete(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
-      console.log('userToDelete:', userToDelete);
+      console.log("userToDelete:", userToDelete);
       if (userToDelete) {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`https://localhost:44364/api/User/DeleteUser/${userToDelete.userId}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log('Delete API Response:', response);
-        if (response.ok) {
-          setUsers((prevUsers) =>
-            prevUsers.filter((user) => user.userId !== userToDelete.userId)
-          );
-        }
+        await api.delete(`/api/User/DeleteUser/${userToDelete.userId}`);
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user.userId !== userToDelete.userId)
+        );
       }
     } catch (error) {
-      console.error('Error deleting admin:', error);
+      console.error("Error deleting admin:", error);
     } finally {
       setDialogOpenDelete(false);
       setUserToDelete(null);
     }
   };
-  
-  
 
   const handleCancelDelete = () => {
     setDialogOpenDelete(false);
@@ -109,25 +94,35 @@ function ListAdmins() {
     setAnchorEl(null);
   };
 
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
-
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: "20px" }}>
       <Typography variant="h3" gutterBottom mb={5}>
         Admins
       </Typography>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={5}
+      >
         <Typography variant="h3"> </Typography>
-        <Link to="http://localhost:3000/dashboard/createAdmin" style={{ textDecoration: 'none' }}>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Link
+          to="http://localhost:3000/dashboard/createAdmin"
+          style={{ textDecoration: "none" }}
+        >
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
             New Admin
           </Button>
         </Link>
@@ -156,21 +151,21 @@ function ListAdmins() {
                   {user && user.userName}
                 </TableCell>
                 <TableCell align="right">
-                    <IconButton
-                      aria-label="more"
-                      aria-controls="action-menu"
-                      aria-haspopup="true"
-                      onClick={(event) => handleMenuOpen(event, user)} // Pass the user to handleMenuOpen
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </TableCell>
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="action-menu"
+                    aria-haspopup="true"
+                    onClick={(event) => handleMenuOpen(event, user)} // Pass the user to handleMenuOpen
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-             <TablePagination
+      <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={users.length} // Numri total i shënimeve
@@ -180,33 +175,37 @@ function ListAdmins() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
 
-        <Menu
-          id="action-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          keepMounted
-        >
-          <MenuItem onClick={handleMenuClose}>
-            {/* Add any specific menu item content you need here */}
-          </MenuItem>
-          <MenuItem onClick={() => handleDeleteClick(userToDelete)}>
-            <DeleteIcon fontSize="small" sx={{ marginRight: 1 }} />
-            Delete
-          </MenuItem>
-        </Menu>
-
+      <Menu
+        id="action-menu"
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        keepMounted
+      >
+        <MenuItem onClick={handleMenuClose}>
+          {/* Add any specific menu item content you need here */}
+        </MenuItem>
+        <MenuItem onClick={() => handleDeleteClick(userToDelete)}>
+          <DeleteIcon fontSize="small" sx={{ marginRight: 1 }} />
+          Delete
+        </MenuItem>
+      </Menu>
 
       <Dialog open={dialogOpenDelete} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete {userToDelete?.name} {userToDelete?.surname}?
+          Are you sure you want to delete {userToDelete?.name}{" "}
+          {userToDelete?.surname}?
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" variant="contained">
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+          >
             Delete
           </Button>
         </DialogActions>
@@ -215,4 +214,4 @@ function ListAdmins() {
   );
 }
 
-export default ListAdmins; 
+export default ListAdmins;

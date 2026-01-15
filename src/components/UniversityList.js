@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button } from 'react-bootstrap'; 
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function UniversityList() {
   const [universities, setUniversities] = useState([]);
-  
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUniversities();
@@ -15,18 +12,27 @@ function UniversityList() {
 
   const fetchUniversities = async () => {
     try {
-      const response = await fetch('http://localhost:44364/api/Universities'); 
+      const response = await fetch("http://localhost:44364/api/Universities");
       const data = await response.json();
       setUniversities(data);
     } catch (error) {
-      console.error('Gabim gjatë kërkesës:', error);
+      console.error("Gabim gjatë kërkesës:", error);
     }
   };
 
-
+  const handleGoBack = () => {
+    window.history.back();
+  };
 
   return (
-    <div className='container'>
+    <div className="container">
+      <Button
+        variant="outline-secondary"
+        onClick={handleGoBack}
+        style={{ marginBottom: "20px" }}
+      >
+        ← Back
+      </Button>
       <h1>List of Universities</h1>
       <br></br>
       <div className="row">
@@ -39,18 +45,18 @@ function UniversityList() {
                 <Card.Text>Pershkrimi: {university.description}</Card.Text>
               </Card.Body>
               <Card.Footer>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Link to={`/listRateUniversity/${university.universityId}`}> 
-                    <Button variant="primary">View Rate University</Button>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Link to={`/listRateUniversity/${university.universityId}`}>
+                    {/* <Button variant="primary">View Rate University</Button> */}
                   </Link>
-
                 </div>
               </Card.Footer>
             </Card>
           </div>
         ))}
       </div>
-
     </div>
   );
 }
