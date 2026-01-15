@@ -7,8 +7,8 @@ import {
   Stack,
   Typography,
   IconButton,
-  Alert,
 } from "@mui/material";
+import { toast } from "react-toastify";
 import api from "../../api/axios";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,7 +20,6 @@ const CreateAdmin = () => {
   const [email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [Gender, setGender] = useState("");
-  const [message, setMessage] = useState("");
 
   const [animationComplete, setAnimationComplete] = useState(false);
   useEffect(() => {
@@ -57,7 +56,10 @@ const CreateAdmin = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("You need to log in to create an admin.");
+      toast.error("You need to log in to create an admin.", {
+        position: "top-right",
+        autoClose: 5000,
+      });
       return;
     }
 
@@ -78,11 +80,29 @@ const CreateAdmin = () => {
       })
       .then((response) => {
         console.log(response.data);
-        setMessage("Admin created successfully!");
+        toast.success("Admin created successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        // Clear form fields after successful creation
+        setName("");
+        setSurname("");
+        setUserName("");
+        setEmail("");
+        setPassword("");
+        setGender("");
       })
       .catch((error) => {
         console.error("Error creating admin:", error.message);
-        setMessage("Error creating admin. Please try again later.");
+        const errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.description ||
+          error.message ||
+          "Error creating admin. Please try again later.";
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+        });
       });
   };
 
@@ -188,16 +208,6 @@ const CreateAdmin = () => {
                       Create Admin
                     </Button>
                   </Grid>
-                  {message && (
-                    <Alert
-                      severity={
-                        message.startsWith("Error") ? "error" : "success"
-                      }
-                      sx={{ mt: 2 }}
-                    >
-                      {message}
-                    </Alert>
-                  )}
                 </Grid>
               </Grid>
             </motion.div>

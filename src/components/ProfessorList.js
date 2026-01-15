@@ -10,6 +10,8 @@ import {
   CardActions,
   Input,
   List,
+  Alert,
+  Box,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Logo2 from "../components/logo/Logo2";
@@ -130,6 +132,14 @@ function ProfessorList() {
 
       <div className="container">
         <h2>List of Professors</h2>
+        <Box sx={{ mb: 3, mt: 2 }}>
+          <Alert severity="info" sx={{ fontSize: "1rem", fontWeight: 500 }}>
+            <strong>Important Notice:</strong> All ratings and reviews displayed
+            here are based on student perceptions and opinions. These ratings
+            reflect individual student experiences and should be considered as
+            subjective feedback rather than objective assessments.
+          </Alert>
+        </Box>
         <br />
         {filteredProfessors.length === 0 && allProfessors.length > 0 && (
           <Typography

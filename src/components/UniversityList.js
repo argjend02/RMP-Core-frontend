@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Card, Button, Alert } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 
 function UniversityList() {
   const [universities, setUniversities] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUniversities();
@@ -21,7 +22,7 @@ function UniversityList() {
   };
 
   const handleGoBack = () => {
-    window.history.back();
+    navigate("/home");
   };
 
   return (
@@ -34,7 +35,17 @@ function UniversityList() {
         ← Back
       </Button>
       <h1>List of Universities</h1>
-      <br></br>
+      <Alert variant="info" style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Alert.Heading>
+          <strong>Important Notice</strong>
+        </Alert.Heading>
+        <p style={{ marginBottom: 0 }}>
+          All ratings and reviews displayed here are based on student
+          perceptions and opinions. These ratings reflect individual student
+          experiences and should be considered as subjective feedback rather
+          than objective assessments.
+        </p>
+      </Alert>
       <div className="row">
         {universities.map((university) => (
           <div key={university.id} className="col-md-4 mb-4">

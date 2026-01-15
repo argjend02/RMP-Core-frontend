@@ -28,26 +28,81 @@ import api from "../../api/axios";
 
 function GetOverallRatingProfessor() {
   const { professorId } = useParams();
-  const [overallRating, setOverallRating] = useState({});
+  const [overallRating, setOverallRating] = useState({
+    communicationSkills: 0,
+    responsiveness: 0,
+    gradingFairness: 0,
+    totalRatings: 0,
+  });
   const [professor, setProfessor] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
+  const [ratings, setRatings] = useState([]);
+
+  const calculateAverages = (ratingsData) => {
+    if (!ratingsData || ratingsData.length === 0) {
+      return {
+        communicationSkills: 0,
+        responsiveness: 0,
+        gradingFairness: 0,
+        totalRatings: 0,
+      };
+    }
+
+    const total = ratingsData.length;
+    const sumCommunication = ratingsData.reduce(
+      (sum, rating) => sum + (rating.communicationSkills || 0),
+      0
+    );
+    const sumResponsiveness = ratingsData.reduce(
+      (sum, rating) => sum + (rating.responsiveness || 0),
+      0
+    );
+    const sumGradingFairness = ratingsData.reduce(
+      (sum, rating) => sum + (rating.gradingFairness || 0),
+      0
+    );
+
+    return {
+      communicationSkills: (sumCommunication / total).toFixed(2),
+      responsiveness: (sumResponsiveness / total).toFixed(2),
+      gradingFairness: (sumGradingFairness / total).toFixed(2),
+      totalRatings: total,
+    };
+  };
 
   const fetchProfessorAndRating = useCallback(async () => {
     try {
+      // Fetch professor data
       const professorResponse = await api.get(
-        `/api/GetRateProfessorsById/${professorId}`
+        `/api/GetProfessorById/${professorId}`
       );
       setProfessor(professorResponse.data);
 
-      const ratingResponse = await api.get(
-        `/api/RateProfessor/GetOverallRatingForProfessors`
+      // Fetch all ratings for this professor
+      const ratingsResponse = await fetch(
+        `http://localhost:44364/api/GetRateProfessorsByProfessorId/${professorId}`
       );
-      const professorRating = ratingResponse.data.find(
-        (rating) => rating.professorId === professorId
-      );
-      if (professorRating) {
-        setOverallRating(professorRating);
+      const ratingsData = await ratingsResponse.json();
+
+      // Handle different response formats
+      let ratingsArray = [];
+      if (Array.isArray(ratingsData)) {
+        ratingsArray = ratingsData;
+      } else if (ratingsData && Array.isArray(ratingsData.data)) {
+        ratingsArray = ratingsData.data;
+      } else if (
+        ratingsData &&
+        typeof ratingsData === "object" &&
+        !ratingsData.code
+      ) {
+        ratingsArray = [ratingsData];
       }
+
+      setRatings(ratingsArray);
+
+      // Calculate averages from the ratings
+      const averages = calculateAverages(ratingsArray);
+      setOverallRating(averages);
     } catch (error) {
       console.error("Error during request:", error);
     }
@@ -162,19 +217,13 @@ function GetOverallRatingProfessor() {
             <Box sx={{ marginTop: 6 }}>
               <Typography>
                 <strong>Communication Skills:</strong>{" "}
-                <strong className="strRate">
-                  {overallRating.communicationSkills}
-                </strong>{" "}
-                /5
+                {overallRating.communicationSkills} /5
               </Typography>
               {/* <Rating value={overallRating.communicationSkills} readOnly /> */}
             </Box>
             <Box>
               <Typography>
-                <strong>Responsiveness:</strong>{" "}
-                <strong className="strRate">
-                  {overallRating.responsiveness}
-                </strong>{" "}
+                <strong>Responsiveness:</strong> {overallRating.responsiveness}
                 /5
               </Typography>
               {/* <Rating value={overallRating.responsiveness} readOnly /> */}
@@ -182,9 +231,7 @@ function GetOverallRatingProfessor() {
             <Box>
               <Typography>
                 <strong>Grading Fairness:</strong>{" "}
-                <strong className="strRate">
-                  {overallRating.gradingFairness}
-                </strong>
+                {overallRating.gradingFairness}
                 /5
               </Typography>
               {/* <Rating value={overallRating.gradingFairness} readOnly /> */}
