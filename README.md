@@ -10,7 +10,6 @@
 [![Material-UI](https://img.shields.io/badge/Material--UI-5.14.5-007FFF?style=flat&logo=materialui)](https://mui.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-7952B3?style=flat&logo=bootstrap)](https://getbootstrap.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=flat&logo=nodedotjs)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow?style=flat)]()
 
 ---
