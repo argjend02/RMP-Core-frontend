@@ -199,7 +199,35 @@ Launches the test runner in interactive watch mode.
 - Activity monitoring
 
 ---
+---
 
+## 📸 Screenshots & Demo
+
+Get a visual tour of the RMP Core application features:
+### Home Page
+| Home Page |
+|-----------|
+| <img width="1919" height="909" alt="Screenshot 2026-01-15 203218" src="https://github.com/user-attachments/assets/fc234db7-43ab-4b0d-b1e1-ba12b4477ca6" />
+
+
+### Authentication & Dashboard
+| Login Page | Student Dashboard |
+|-----------|-------------------|
+| <img width="1919" height="909" alt="Screenshot 2026-01-15 203218" src="https://github.com/user-attachments/assets/85b7de1e-8383-4468-b7c2-198cab2a9b3f" /> | <img width="1920" height="1416" alt="image" src="https://github.com/user-attachments/assets/3decb3a8-b11e-4b11-b331-7d3c18a5bbdf" />
+ 
+
+
+### University & Professor Management
+| Professor Listing | Universities Listing |
+|---------------------|------------------|
+| <img width="1920" height="1586" alt="image" src="https://github.com/user-attachments/assets/b37602a8-3264-4668-8906-dab855bab098" /> | <img width="3024" height="1666" alt="image" src="https://github.com/user-attachments/assets/58e91e60-d7d0-4aaa-be67-18fcacd9de2b" /> 
+
+### Rating & Admin Dashboard
+| Rate Professor | Admin Dashboard |
+|---------------|-----------------|
+| <img width="1920" height="881" alt="image" src="https://github.com/user-attachments/assets/38aaa7e2-5542-4574-b62f-0d5a212b4389" />| <img width="1920" height="1496" alt="image" src="https://github.com/user-attachments/assets/802dd698-e550-4936-8f6e-caf53bc74eed" /> |
+
+---
 ## 🎨 Design System
 
 The project uses a custom Material-UI theme with:
