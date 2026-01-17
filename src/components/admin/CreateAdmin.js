@@ -1,9 +1,17 @@
-
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Grid, Stack, Typography, IconButton, Alert } from '@mui/material';
-import axios from "axios";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import { toast } from "react-toastify";
+import api from "../../api/axios";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { AnimatePresence, motion } from "framer-motion";
 
 const CreateAdmin = () => {
   const [Name, setName] = useState("");
@@ -11,8 +19,7 @@ const CreateAdmin = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  const [Gender, setGender] = useState('');
-  const [message, setMessage] = useState(""); 
+  const [Gender, setGender] = useState("");
 
   const [animationComplete, setAnimationComplete] = useState(false);
   useEffect(() => {
@@ -46,10 +53,13 @@ const CreateAdmin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage('You need to log in to create an admin.');
+      toast.error("You need to log in to create an admin.", {
+        position: "top-right",
+        autoClose: 5000,
+      });
       return;
     }
 
@@ -61,20 +71,38 @@ const CreateAdmin = () => {
     payload.append("password", Password);
     payload.append("gender", Gender);
 
-    axios
-      .post("https://localhost:44364/api/User/CreateUser", payload, {
+    api
+      .post("/api/User/CreateUser", payload, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}` // Include the token in the headers
+          Authorization: `Bearer ${token}`, // Include the token in the headers
         },
       })
       .then((response) => {
         console.log(response.data);
-        setMessage('Admin created successfully!');
+        toast.success("Admin created successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        // Clear form fields after successful creation
+        setName("");
+        setSurname("");
+        setUserName("");
+        setEmail("");
+        setPassword("");
+        setGender("");
       })
       .catch((error) => {
-        console.error('Error creating admin:', error.message);
-        setMessage('Error creating admin. Please try again later.');
+        console.error("Error creating admin:", error.message);
+        const errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.description ||
+          error.message ||
+          "Error creating admin. Please try again later.";
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+        });
       });
   };
 
@@ -84,14 +112,12 @@ const CreateAdmin = () => {
 
   return (
     <Container sx={{ mt: 0 }}>
-      <div style={{ paddingLeft: '0px' }}>
+      <div style={{ paddingLeft: "0px" }}>
         <Stack direction="row" alignItems="center">
           <IconButton color="primary" onClick={handleGoBack}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h4">
-            Create Admin
-          </Typography>
+          <Typography variant="h4">Create Admin</Typography>
         </Stack>
       </div>
       <form onSubmit={handleSubmit}>
@@ -103,8 +129,8 @@ const CreateAdmin = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               exit={{ opacity: 0, y: -50 }}
             >
-              <Grid sx={{ display: 'flex' }}>
-                <Grid container spacing={2} sx={{ mt: 3, width: '58%' }}>
+              <Grid sx={{ display: "flex" }}>
+                <Grid container spacing={2} sx={{ mt: 3, width: "58%" }}>
                   <Grid item xs={6}>
                     <TextField
                       type="text"
@@ -113,7 +139,7 @@ const CreateAdmin = () => {
                       onChange={handleNameChange}
                       required
                       fullWidth
-                      variant='filled'
+                      variant="filled"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -124,7 +150,7 @@ const CreateAdmin = () => {
                       onChange={handleSurnameChange}
                       required
                       fullWidth
-                      variant='filled'
+                      variant="filled"
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -135,7 +161,7 @@ const CreateAdmin = () => {
                       onChange={handleUserNameChange}
                       required
                       fullWidth
-                      variant='filled'
+                      variant="filled"
                     />
                   </Grid>
                   <Grid item xs={8}>
@@ -146,7 +172,7 @@ const CreateAdmin = () => {
                       onChange={handleEmailChange}
                       required
                       fullWidth
-                      variant='filled'
+                      variant="filled"
                     />
                   </Grid>
                   <Grid item xs={7}>
@@ -157,7 +183,7 @@ const CreateAdmin = () => {
                       onChange={handlePasswordChange}
                       required
                       fullWidth
-                      variant='filled'
+                      variant="filled"
                     />
                   </Grid>
                   <Grid item xs={5}>
@@ -168,7 +194,7 @@ const CreateAdmin = () => {
                       onChange={handleGenderChange}
                       required
                       fullWidth
-                      variant='filled'
+                      variant="filled"
                       SelectProps={{ native: true }} // Add this prop
                     >
                       <option value=""> </option>
@@ -182,11 +208,6 @@ const CreateAdmin = () => {
                       Create Admin
                     </Button>
                   </Grid>
-                  {message && (
-                    <Alert severity={message.startsWith('Error') ? 'error' : 'success'} sx={{ mt: 2 }}>
-                      {message}
-                    </Alert>
-                  )}
                 </Grid>
               </Grid>
             </motion.div>

@@ -1,27 +1,28 @@
-
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, CardContent, Typography, Grid, Box } from '@mui/material';
-import Rating from '@mui/material/Rating';
-import './ListRateProfessor.css';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Card, CardContent, Typography, Grid, Box } from "@mui/material";
+import Rating from "@mui/material/Rating";
+import api from "../api/axios";
+import "./ListRateProfessor.css";
 
 function ListRateUniversity() {
   const { universityId } = useParams();
   const [rateProfessors, setRateProfessors] = useState([]);
 
   useEffect(() => {
-    fetchRateProfessors();
-  }, []);
+    const fetchRateProfessors = async () => {
+      try {
+        const response = await api.get(
+          `/api/RateUniversity/RateUniversity/University/${universityId}`
+        );
+        setRateProfessors(response.data);
+      } catch (error) {
+        console.error("Error fetching rate professors:", error);
+      }
+    };
 
-  const fetchRateProfessors = async () => {
-    try {
-      const response = await fetch(`https://localhost:44364/api/RateUniversity/RateUniversity/University/${universityId}`);
-      const data = await response.json();
-      setRateProfessors(data);
-    } catch (error) {
-      console.error('Error fetching rate professors:', error);
-    }
-  };
+    fetchRateProfessors();
+  }, [universityId]);
 
   return (
     <div className="container">

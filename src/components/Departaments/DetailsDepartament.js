@@ -1,11 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardActions, Button, Typography, Grid, Stack, Breadcrumbs, TextField, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
-import { MoreVert as MoreVertIcon, Edit as EditIcon, Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Iconify from '../iconify';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Typography,
+  Grid,
+  Stack,
+  Breadcrumbs,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+} from "@mui/material";
+import {
+  MoreVert as MoreVertIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Visibility as VisibilityIcon,
+} from "@mui/icons-material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Iconify from "../iconify";
+import api from "../../api/axios";
 
 function DetailsDepartment() {
   const [departments, setDepartments] = useState([]);
@@ -17,36 +38,34 @@ function DetailsDepartment() {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [universities, setUniversities] = useState([]);
 
-
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchDepartments();
     fetchUniversities();
-
   }, []);
 
   const fetchDepartments = async () => {
     try {
-      const response = await fetch('http://localhost:44364/api/Departments'); // Replace with the corresponding API endpoint
-      const data = await response.json();
-      setDepartments(data);
+      const response = await api.get("/api/Departments");
+      setDepartments(response.data);
     } catch (error) {
-      console.error('Error fetching departments:', error);
+      console.error("Error fetching departments:", error);
     }
   };
   const fetchUniversities = async () => {
     try {
-      const response = await fetch('http://localhost:44364/api/Universities');
-      const data = await response.json();
-      setUniversities(data);
+      const response = await api.get("/api/Universities");
+      setUniversities(response.data);
     } catch (error) {
-      console.error('Error fetching universities:', error);
+      console.error("Error fetching universities:", error);
     }
   };
   const getUniversityName = (universityId) => {
-    const university = universities.find((uni) => uni.universityId === universityId);
-    return university ? university.name : '';
+    const university = universities.find(
+      (uni) => uni.universityId === universityId
+    );
+    return university ? university.name : "";
   };
 
   const mixedColor = "#f8f8f8";
@@ -58,16 +77,17 @@ function DetailsDepartment() {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await fetch(`https://localhost:44364/api/Department/DeleteDepartment/${departmentToDelete.departmentId}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        setDepartments((prevDepartments) =>
-          prevDepartments.filter((department) => department.departmentId !== departmentToDelete.departmentId)
-        );
-      }
+      await api.delete(
+        `/api/Department/DeleteDepartment/${departmentToDelete.departmentId}`
+      );
+      setDepartments((prevDepartments) =>
+        prevDepartments.filter(
+          (department) =>
+            department.departmentId !== departmentToDelete.departmentId
+        )
+      );
     } catch (error) {
-      console.error('Error deleting department:', error);
+      console.error("Error deleting department:", error);
     } finally {
       setDialogOpenDelete(false);
     }
@@ -85,22 +105,19 @@ function DetailsDepartment() {
 
   const handleConfirmEdit = async () => {
     try {
-      const response = await fetch(`https://localhost:44364/api/Department/UpdateDepartment/${editDepartment.departmentId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editDepartment),
-      });
-      if (response.ok) {
-        setDepartments((prevDepartments) =>
-          prevDepartments.map((department) =>
-            department.departmentId === editDepartment.departmentId ? editDepartment : department
-          )
-        );
-      }
+      await api.put(
+        `/api/Department/UpdateDepartment/${editDepartment.departmentId}`,
+        editDepartment
+      );
+      setDepartments((prevDepartments) =>
+        prevDepartments.map((department) =>
+          department.departmentId === editDepartment.departmentId
+            ? editDepartment
+            : department
+        )
+      );
     } catch (error) {
-      console.error('Error updating department:', error);
+      console.error("Error updating department:", error);
     } finally {
       setDialogOpen(false);
     }
@@ -126,13 +143,24 @@ function DetailsDepartment() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+    <div style={{ padding: "20px" }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={5}
+      >
         <Typography variant="h3" gutterBottom>
           Departments
         </Typography>
-        <Link to="http://localhost:3000/dashboard/createDepartment" style={{ textDecoration: 'none' }}>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Link
+          to="http://localhost:3000/dashboard/createDepartment"
+          style={{ textDecoration: "none" }}
+        >
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
             New Department
           </Button>
         </Link>
@@ -148,24 +176,40 @@ function DetailsDepartment() {
                 </Typography>
                 <br />
                 <Typography variant="body1" color="text.secondary">
-                  <strong>University:</strong> {getUniversityName(department.universityId)}
+                  <strong>University:</strong>{" "}
+                  {getUniversityName(department.universityId)}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                  <strong>Established Year:</strong> {department.establishedYear}
+                  <strong>Established Year:</strong>{" "}
+                  {department.establishedYear}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   <strong>Staf number:</strong> {department.staffNumber}
                 </Typography>
-                
               </CardContent>
-              <CardActions style={{ borderTop: '1px solid #f0f0f0', background: mixedColor }}>
-                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-
-                          <Link to={`http://localhost:3000/dashboard/departments/courseDep/${department.departmentId}`}>
-                            <Button variant="contained" color="primary" /*startIcon={<VisibilityIcon />}*/>
-                              View Courses
-                            </Button>
-                          </Link>
+              <CardActions
+                style={{
+                  borderTop: "1px solid #f0f0f0",
+                  background: mixedColor,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <Link
+                    to={`http://localhost:3000/dashboard/departments/courseDep/${department.departmentId}`}
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary" /*startIcon={<VisibilityIcon />}*/
+                    >
+                      View Courses
+                    </Button>
+                  </Link>
                   <div style={{ flexGrow: 1 }} />
                   <IconButton
                     onClick={(event) => handleMenuOpen(event, department)}
@@ -190,21 +234,32 @@ function DetailsDepartment() {
           <Button onClick={handleCancelDelete} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" variant="contained">
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+          >
             Delete
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="md">
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogTitle>Edit Department</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
-            <Grid item xs={12}  marginTop={2}>
+            <Grid item xs={12} marginTop={2}>
               <TextField
                 label="Department Name"
                 fullWidth
-                value={editDepartment?.name || ''}
-                onChange={(e) => setEditDepartment({ ...editDepartment, name: e.target.value })}
+                value={editDepartment?.name || ""}
+                onChange={(e) =>
+                  setEditDepartment({ ...editDepartment, name: e.target.value })
+                }
               />
             </Grid>
 
@@ -212,16 +267,26 @@ function DetailsDepartment() {
               <TextField
                 label="Department Name"
                 fullWidth
-                value={editDepartment?.establishedYear || ''}
-                onChange={(e) => setEditDepartment({ ...editDepartment, establishedYear: e.target.value })}
+                value={editDepartment?.establishedYear || ""}
+                onChange={(e) =>
+                  setEditDepartment({
+                    ...editDepartment,
+                    establishedYear: e.target.value,
+                  })
+                }
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 label="Department Name"
                 fullWidth
-                value={editDepartment?.staffNumber || ''}
-                onChange={(e) => setEditDepartment({ ...editDepartment, staffNumber: e.target.value })}
+                value={editDepartment?.staffNumber || ""}
+                onChange={(e) =>
+                  setEditDepartment({
+                    ...editDepartment,
+                    staffNumber: e.target.value,
+                  })
+                }
               />
             </Grid>
           </Grid>
@@ -230,7 +295,11 @@ function DetailsDepartment() {
           <Button onClick={() => setDialogOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmEdit} color="warning" variant="contained">
+          <Button
+            onClick={handleConfirmEdit}
+            color="warning"
+            variant="contained"
+          >
             Save Changes
           </Button>
         </DialogActions>
@@ -247,7 +316,7 @@ function DetailsDepartment() {
           <EditIcon fontSize="small" sx={{ marginRight: 1 }} />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleDelete} >
+        <MenuItem onClick={handleDelete}>
           <DeleteIcon fontSize="small" sx={{ marginRight: 1 }} />
           Delete
         </MenuItem>

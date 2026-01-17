@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import api from "../api/axios";
 
 const RateProfessor = () => {
   const [rateProfessors, setRateProfessors] = useState([]);
@@ -9,7 +9,7 @@ const RateProfessor = () => {
     communicationskills: 0,
     responsiveness: 0,
     gradingfairness: 0,
-    feedback: '',
+    feedback: "",
   });
 
   useEffect(() => {
@@ -18,10 +18,10 @@ const RateProfessor = () => {
 
   const getAllRateProfessors = async () => {
     try {
-      const response = await axios.get('/api/RateProfessor');
+      const response = await api.get("/api/RateProfessor");
       setRateProfessors(response.data);
     } catch (error) {
-      console.error('Error fetching rate professors:', error);
+      console.error("Error fetching rate professors:", error);
     }
   };
 
@@ -31,7 +31,10 @@ const RateProfessor = () => {
 
   const handleCreateRateProfessor = async () => {
     try {
-      const response = await axios.post('/api/RateProfessor/CreateRateProfessor', formData);
+      const response = await api.post(
+        "/api/RateProfessor/CreateRateProfessor",
+        formData
+      );
       setRateProfessors([...rateProfessors, response.data]);
       setFormData({
         professorid: 0,
@@ -39,19 +42,21 @@ const RateProfessor = () => {
         communicationskills: 0,
         responsiveness: 0,
         gradingfairness: 0,
-        feedback: '',
+        feedback: "",
       });
     } catch (error) {
-      console.error('Error creating rate professor:', error);
+      console.error("Error creating rate professor:", error);
     }
   };
 
   const handleDeleteRateProfessor = async (id) => {
     try {
-      await axios.delete(`/api/RateProfessor/DeleteRateProfessor/${id}`);
-      setRateProfessors(rateProfessors.filter((professor) => professor.id !== id));
+      await api.delete(`/api/RateProfessor/DeleteRateProfessor/${id}`);
+      setRateProfessors(
+        rateProfessors.filter((professor) => professor.id !== id)
+      );
     } catch (error) {
-      console.error('Error deleting rate professor:', error);
+      console.error("Error deleting rate professor:", error);
     }
   };
 
@@ -61,10 +66,20 @@ const RateProfessor = () => {
       <div>
         <h2>Create New Rate Professor</h2>
         <label>Professor ID:</label>
-        <input type="number" name="professorid" value={formData.professorid} onChange={handleChange} />
+        <input
+          type="number"
+          name="professorid"
+          value={formData.professorid}
+          onChange={handleChange}
+        />
 
         <label>Student ID:</label>
-        <input type="number" name="studentid" value={formData.studentid} onChange={handleChange} />
+        <input
+          type="number"
+          name="studentid"
+          value={formData.studentid}
+          onChange={handleChange}
+        />
 
         <label>Communication Skills:</label>
         <input
@@ -75,7 +90,12 @@ const RateProfessor = () => {
         />
 
         <label>Responsiveness:</label>
-        <input type="number" name="responsiveness" value={formData.responsiveness} onChange={handleChange} />
+        <input
+          type="number"
+          name="responsiveness"
+          value={formData.responsiveness}
+          onChange={handleChange}
+        />
 
         <label>Grading Fairness:</label>
         <input
@@ -86,7 +106,11 @@ const RateProfessor = () => {
         />
 
         <label>Feedback:</label>
-        <textarea name="feedback" value={formData.feedback} onChange={handleChange} />
+        <textarea
+          name="feedback"
+          value={formData.feedback}
+          onChange={handleChange}
+        />
 
         <button onClick={handleCreateRateProfessor}>Create</button>
       </div>
@@ -102,7 +126,9 @@ const RateProfessor = () => {
               <p>Responsiveness: {professor.responsiveness}</p>
               <p>Grading Fairness: {professor.gradingFairness}</p>
               <p>Feedback: {professor.feedback}</p>
-              <button onClick={() => handleDeleteRateProfessor(professor.id)}>Delete</button>
+              <button onClick={() => handleDeleteRateProfessor(professor.id)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>

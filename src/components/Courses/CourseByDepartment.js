@@ -1,7 +1,6 @@
 
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Accordion,
   AccordionSummary,
@@ -10,38 +9,34 @@ import {
   Divider,
   Typography,
   Stack,
-  Paper,
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 function CourseByDepartment() {
   const [courses, setCourses] = useState([]);
-  const { departmentId } = useParams();
 
-  useEffect(() => {
-    if (departmentId) {
-      fetchCourses();
-    }
-  }, [departmentId]);
-
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:44364/api/Courses`);
       const data = await response.json();
-      const filteredCourses = data.filter((course) => course.departmentID === +departmentId);
-      setCourses(filteredCourses);
+      console.log('Fetched courses:', data);
+      setCourses(data);
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
   const handleGoBack = () => {
     window.history.back();
   };
 
   return (
-    <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+    <div style={{ padding: '20px' }}>
+      <Stack direction="row" alignItems="center">
         <IconButton color="primary" onClick={handleGoBack}>
           <ArrowBackIcon />
         </IconButton>
@@ -49,15 +44,12 @@ function CourseByDepartment() {
       </Stack>
       <Divider />
       {courses.map((course) => (
-        <Accordion key={course.id}>
+        <Accordion key={course.id} elevation={3} style={{ margin: '10px 0' }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h6">{course.name}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <div>
-              <Typography variant="body1" color="textSecondary">
-                <strong>Code:</strong> {course.code}
-              </Typography>
               <Typography variant="body1" color="textSecondary">
                 <strong>Credit Hours:</strong> {course.creditHours}
               </Typography>
@@ -68,7 +60,7 @@ function CourseByDepartment() {
           </AccordionDetails>
         </Accordion>
       ))}
-    </Paper>
+    </div>
   );
 }
 

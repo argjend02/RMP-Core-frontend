@@ -1,16 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 // @mui
-import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover, Link, Button } from '@mui/material';
-import account from '../../../_mock/account';
-
+import { alpha } from "@mui/material/styles";
+import {
+  Box,
+  Divider,
+  Typography,
+  Stack,
+  MenuItem,
+  Avatar,
+  IconButton,
+  Popover,
+  Link,
+  Button,
+} from "@mui/material";
+import account from "../../../_mock/account";
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
-    label: 'Profile',
-    icon: 'eva:person-fill',
+    label: "Profile",
+    icon: "eva:person-fill",
   },
 ];
 
@@ -18,9 +28,6 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-
-  
-
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -30,20 +37,18 @@ export default function AccountPopover() {
     setOpen(null);
   };
   const handleGo = () => {
-    window.location.href = 'http://localhost:3000/dashboard/adminProfile';
+    window.location.href = "http://localhost:3000/dashboard/adminProfile";
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('email');
-    window.location.href = 'http://localhost:3000/home';
-
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    window.location.href = "http://localhost:3000/home";
   };
 
-
-  const [userFullName, setUserFullName] = useState('');
-  const email = localStorage.getItem('userId'); 
-  const API_BASE_URL = 'http://localhost:44364/api';
+  const [userFullName, setUserFullName] = useState("");
+  const email = localStorage.getItem("userId");
+  const API_BASE_URL = "http://localhost:44364/api";
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -55,20 +60,18 @@ export default function AccountPopover() {
           setUserFullName(fullName);
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
 
     fetchUserData();
   }, [email]);
 
-  const [userProfilePhoto, setUserProfilePhoto] = useState('');
-
+  const [userProfilePhoto, setUserProfilePhoto] = useState("");
 
   useEffect(() => {
     const fetchProfilePhoto = async () => {
       try {
-
         const response = await fetch(`${API_BASE_URL}/GetUserById/${email}`);
         if (response.ok) {
           const userData = await response.json();
@@ -76,13 +79,12 @@ export default function AccountPopover() {
           setUserProfilePhoto(profilePhoto);
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
 
     fetchProfilePhoto();
   }, [email]);
-
 
   return (
     <>
@@ -91,60 +93,59 @@ export default function AccountPopover() {
         sx={{
           p: 0,
           ...(open && {
-            '&:before': {
+            "&:before": {
               zIndex: 1,
               content: "''",
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              position: 'absolute',
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              position: "absolute",
               bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
             },
           }),
         }}
       >
-        <Avatar src={`http://localhost:44364/${userProfilePhoto}`}  />
+        <Avatar src={`http://localhost:44364/${userProfilePhoto}`} />
       </IconButton>
 
       <Popover
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
           sx: {
             p: 0,
             mt: 1.5,
             ml: 0.75,
             width: 180,
-            '& .MuiMenuItem-root': {
-              typography: 'body2',
+            "& .MuiMenuItem-root": {
+              typography: "body2",
               borderRadius: 0.75,
             },
           },
         }}
       >
-      <Box sx={{ my: 1.5, px: 2.5 }}>
+        <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
             {userFullName}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
             {email}
           </Typography>
         </Box>
 
+        <Divider sx={{ borderStyle: "dashed" }} />
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <Stack sx={{ p: 1 }}>
+        {/* <Stack sx={{ p: 1 }}>
             <MenuItem onClick={handleGo}>
               Profile
             </MenuItem>
 
-        </Stack>
+        </Stack> */}
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: "dashed" }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout

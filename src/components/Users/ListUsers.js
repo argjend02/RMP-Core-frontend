@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Table,
@@ -18,11 +17,14 @@ import {
   DialogActions,
   Button,
   Avatar,
-  TablePagination
-} from '@mui/material';
-import { MoreVert as MoreVertIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { AnimatePresence, motion } from 'framer-motion';
-
+  TablePagination,
+} from "@mui/material";
+import {
+  MoreVert as MoreVertIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
+import { AnimatePresence, motion } from "framer-motion";
+import api from "../../api/axios";
 
 function ListUsers() {
   const [users, setUsers] = useState([]);
@@ -34,16 +36,13 @@ function ListUsers() {
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [dialogOpenDelete, setDialogOpenDelete] = useState(false);
-  const [studentToDelete, setStudentToDelete] = useState(null); 
+  const [studentToDelete, setStudentToDelete] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
-
-  
-  
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:44364/api/GetStudents', {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:44364/api/GetStudents", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -51,10 +50,10 @@ function ListUsers() {
       const data = await response.json();
       setUsers(data);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -63,36 +62,29 @@ function ListUsers() {
     setAnimationComplete(true);
   }, []);
 
-
   const handleDeleteClick = (student) => {
     setStudentToDelete(student);
     setDialogOpenDelete(true);
   };
 
-
-  const token = localStorage.getItem('token'); 
+  const token = localStorage.getItem("token");
 
   const handleConfirmDelete = async () => {
     if (token) {
       try {
-          const response = await fetch(`https://localhost:44364/api/User/DeleteUser/${studentToDelete.studentId}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.ok) {
-          setUsers((prevUniversities) =>
-            prevUniversities.filter((student) => student.studentId !== studentToDelete.studentId)
-          );
-        }
+        await api.delete(`/api/User/DeleteUser/${studentToDelete.studentId}`);
+        setUsers((prevUniversities) =>
+          prevUniversities.filter(
+            (student) => student.studentId !== studentToDelete.studentId
+          )
+        );
       } catch (error) {
-        console.error('Gabim gjatë fshirjes:', error);
+        console.error("Gabim gjatë fshirjes:", error);
       } finally {
         setDialogOpenDelete(false);
       }
     } else {
-      console.error('You need to be logged in to delete a university.');
+      console.error("You need to be logged in to delete a university.");
     }
   };
 
@@ -105,34 +97,31 @@ function ListUsers() {
     setAnchorEl(event.currentTarget);
     setSelectedStudent(student);
   };
-  
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  
+
   const handleEdit = () => {
     handleMenuClose();
   };
-  
+
   const handleDelete = () => {
     handleMenuClose();
     handleDeleteClick(selectedStudent);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
-
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: "20px" }}>
       <Typography variant="h3" gutterBottom mb={5}>
         Users
       </Typography>
@@ -154,12 +143,15 @@ function ListUsers() {
             {users.map((user) => (
               <TableRow key={user.userId}>
                 <TableCell>
-
-                    <Avatar
+                  <Avatar
                     src={`http://localhost:44364/${user.profilePhotoPath}`}
                     // alt={`${user.user.name} ${user.user.surname}`}
-                    style={{ width: '50px', height: '50px', borderRadius: '50%' }}
-                    />
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                    }}
+                  />
                 </TableCell>
                 <TableCell component="th" scope="row">
                   {user.name}
@@ -191,10 +183,10 @@ function ListUsers() {
           </TableBody>
         </Table>
       </TableContainer>
-             <TablePagination
+      <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={users.length} 
+        count={users.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -208,15 +200,14 @@ function ListUsers() {
         onClose={handleMenuClose}
         keepMounted
       >
-        <MenuItem onClick={handleConfirmDelete}>
-        </MenuItem>
-        <MenuItem  >
+        <MenuItem onClick={handleConfirmDelete}></MenuItem>
+        <MenuItem>
           <DeleteIcon fontSize="small" sx={{ marginRight: 1 }} />
           Delete
         </MenuItem>
       </Menu>
 
-                          <Dialog open={dialogOpenDelete} onClose={handleCancelDelete}>
+      <Dialog open={dialogOpenDelete} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           Are you sure you want to delete {studentToDelete?.name}?
@@ -225,12 +216,15 @@ function ListUsers() {
           <Button onClick={handleCancelDelete} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" variant="contained">
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+          >
             Delete
           </Button>
         </DialogActions>
       </Dialog>
-
 
       <Menu
         id="action-menu"
@@ -238,15 +232,14 @@ function ListUsers() {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
         keepMounted
-        >
+      >
         <MenuItem onClick={handleDelete}>
           <DeleteIcon fontSize="small" sx={{ marginRight: 1 }} />
           Delete
         </MenuItem>
       </Menu>
-
     </div>
   );
 }
 
-export default ListUsers; 
+export default ListUsers;
